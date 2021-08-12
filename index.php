@@ -5,6 +5,11 @@
   $main_css = 'main.css'; // main css filename
   $flex_css = 'flex.css'; // flex css filename
   $tableui_css = 'tableui.css'; // flex css filename
+
+
+  //define all file paths
+  define('REGISTER_BORROWER', 'usermgt/register_borrower.php');
+  define('USERLIST', 'usermgt/userlist.php'); 
 ?>
 
 <!-- database -->
@@ -151,7 +156,7 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
               <div style='margin-top:-4em;'>
                 <p>
                   <span>Dont Have an account?</span>
-                  <a href='register_borrower.php'>Register</a>
+                  <a href="<?php echo (REGISTER_BORROWER) ?>">Register</a>
                   <span>with us today!</span>
                 </p>
               </div>
@@ -185,26 +190,22 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
               <div style="padding-bottom: 2em;text-align: center;">
 
                   <!-- librarian -->
-                  <a href='math.php'>
-                    <button
-                      name="submit"
-                      style="height: 5em;width: 20em;display: inline-block;"
-                      class="bgprimarycolor"
-                      type="submit"
-                      value="Save"
-                    >
-                      View All Users
-                    </button>
-                  </a>
+                  <span style="<?php echo(($_SESSION['type']) === 'LIBRARIAN' ? '' : 'display: none;') ?>">
+                    <a href="<?php echo (USERLIST) ?>">
+                      <button
+                        style="height: 5em;width: 20em;display: inline-block;"
+                        class="bgprimarycolor"
+                      >
+                        View All Users
+                      </button>
+                    </a>
+                  </span>
 
                   <!-- librarian -->
                   <a href='math.php'>
                     <button
-                      name="submit"
                       style="height: 5em;width: 20em;display: inline-block;"
                       class="bgprimarycolor"
-                      type="submit"
-                      value="Save"
                     >
                       View All Resourses
                     </button>
@@ -213,11 +214,8 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                   <!-- normal user & librarian -->
                   <a href='math.php'>
                     <button
-                      name="submit"
                       style="height: 5em;width: 20em;display: inline-block;"
                       class="bgprimarycolor"
-                      type="submit"
-                      value="Save"
                     >
                       View Available Resourses
                     </button>

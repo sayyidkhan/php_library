@@ -1,14 +1,12 @@
 <?php
-session_start();
 //including the database connection file
-include_once("config.php");
+include_once("../config.php");
 
 //adding the user class
-include 'classes/user.php';
+include '../classes/user.php';
 
 //specify signup type
-define('TYPE', 'LIBRARIAN'); //filepath to expinterest.txt
-define('PIN','1234'); // pin
+define('TYPE', 'BORROWER'); //filepath to expinterest.txt
 ?>
 
 
@@ -27,44 +25,14 @@ define('PIN','1234'); // pin
 
 
 <head>
-	<title>Register - Librarian</title>
+	<title>Register - Borrowers</title>
 </head>
 
 <body>
-	<h2>Register as a Librarian</h2>
-
-	<a href="index.php">Back to Login Page</a>
-	<br/><br/>
+	<h2>Register Account</h2>
 
 	<?php
-	if(isset($_POST['verify']) && $_POST['verify'] == 'verify') {
-		$currentPin = PIN;
-		if( isset($_POST['admin_pin'])) {
-			if($_POST['admin_pin'] == $currentPin) {
-				$_SESSION['admin_pin'] = 'success';
-			}
-			else {
-				$_SESSION['admin_pin'] = '';
-				unset($_SESSION['admin_pin']);
-			}
-		}
-		else {
-			$_SESSION['admin_pin'] = '';
-		    unset($_SESSION['admin_pin']);
-		}
-	}
-	?>
-
-	<section id='validate-section' style="<?php echo(empty($_SESSION['admin_pin']) ? '' : 'display: none;' ) ?>" >
-		<form action="register_librarian.php" method="post" name='form2'>
-			<label>Enter Pin: </label>
-			<input type='password' name='admin_pin' >
-			<button type="submit" name='verify' value='verify'>Verify</button>
-		</form>
-	</section>
-
-	<?php
-	if(isset($_POST['submit']) && $_POST['submit'] == 'add') {
+	if(isset($_POST['Submit'])) {
 			function test_input($data) {
 			  $data = trim($data);
 			  $data = stripslashes($data);
@@ -192,64 +160,63 @@ define('PIN','1234'); // pin
 		}
 	?>
 
-	<section id='register-section' style="<?php echo(empty($_SESSION['admin_pin']) ? 'display: none;' : '') ?>">
-		<form action="register_librarian.php" method="post" name="form1">
-			<table width="25%" border="0">
-				<tr> 
-					<td>Username</td>
-					<td>
-						<input class='input_length' type="text" name="username" value="<?php echo $username;?>">
-						<span class="error">* <?php echo $usernameErr;?></span>
-					</td>
-				</tr>
-				<tr> 
-					<td>Password</td>
-					<td>
-						<input class='input_length' type="text" name="password" value="<?php echo $password;?>">
-						<span class="error">* <?php echo $passwordErr;?></span>
-					</td>
-				</tr>
-				<tr> 
-					<td>Name</td>
-					<td>
-						<input class='input_length' type="text" name="name" value="<?php echo $name;?>">
-						<span class="error">* <?php echo $nameErr;?></span>
-					</td>
-				</tr>
-				<tr> 
-					<td>Surname</td>
-					<td>
-						<input class='input_length' type="text" name="surname" value="<?php echo $surname;?>">
-						<span class="error">* <?php echo $surnameErr;?></span>
-					</td>
-				</tr>
-				<tr> 
-					<td>Phone</td>
-					<td>
-						<input class='input_length' type="text" name="phone" value="<?php echo $phone;?>">
-						<span class="error">* <?php echo $phoneErr;?></span>
-					</td>
-				</tr>
-				<tr> 
-					<td>Email</td>
-					<td>
-						<input class='input_length' type="text" name="email" value="<?php echo $email;?>">
-						<span class="error">* <?php echo $emailErr;?></span>
-					</td>
-				</tr>
-				<tr> 
-					<td></td>
-					<td><input type="submit" name='submit' value="add"></td>
-				</tr>
-			</table>
-		</form>
+	<a href="../index.php">Back to Login Page</a>
+	<a style='padding-left: 1em;' href='javascript:self.history.back();'>Go Back</a>
+	<br/><br/>
 
-		<form action="register_librarian.php" method="post" name='form3'>
-			<label>Stop admin access: </label>
-			<button type="submit" name='verify' value='verify'>Stop</button>
-		</form>
-	</section>
+	<form action="register_borrower.php" method="post" name="form1">
+		<table width="25%" border="0">
+			<tr> 
+				<td>Username</td>
+				<td>
+					<input class='input_length' type="text" name="username" value="<?php echo $username;?>">
+					<span class="error">* <?php echo $usernameErr;?></span>
+				</td>
+			</tr>
+			<tr> 
+				<td>Password</td>
+				<td>
+					<input class='input_length' type="text" name="password" value="<?php echo $password;?>">
+					<span class="error">* <?php echo $passwordErr;?></span>
+				</td>
+			</tr>
+			<tr> 
+				<td>Name</td>
+				<td>
+					<input class='input_length' type="text" name="name" value="<?php echo $name;?>">
+					<span class="error">* <?php echo $nameErr;?></span>
+				</td>
+			</tr>
+			<tr> 
+				<td>Surname</td>
+				<td>
+					<input class='input_length' type="text" name="surname" value="<?php echo $surname;?>">
+					<span class="error">* <?php echo $surnameErr;?></span>
+				</td>
+			</tr>
+			<tr> 
+				<td>Phone</td>
+				<td>
+					<input class='input_length' type="text" name="phone" value="<?php echo $phone;?>">
+					<span class="error">* <?php echo $phoneErr;?></span>
+				</td>
+			</tr>
+			<tr> 
+				<td>Email</td>
+				<td>
+					<input class='input_length' type="text" name="email" value="<?php echo $email;?>">
+					<span class="error">* <?php echo $emailErr;?></span>
+				</td>
+			</tr>
+			<tr> 
+				<td></td>
+				<td><input type="submit" name="Submit" value="add"></td>
+			</tr>
+		</table>
+	</form>
 
+	<a href="register_librarian.php">Register as a Librarian</a>
+	<br/><br/>
 
 </body>
 </html>

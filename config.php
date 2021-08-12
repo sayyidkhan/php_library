@@ -21,7 +21,7 @@ if ($mysqli->connect_error) {
 if (!mysqli_select_db($mysqli,$databaseName)){
     $sql = "CREATE DATABASE ".$databaseName;
     if ($mysqli->query($sql) === TRUE) {
-        echo "Database created successfully";
+        echo "Database initialised successfully";
     }
     else {
         echo "Error creating database: " . $mysqli->error;
@@ -46,5 +46,6 @@ function initTableIfNotExist($conn,$table_name,$sql_filename) {
 **/
 //parameters to pass: ($conn,$table_name,$sql_filename)
 initTableIfNotExist($mysqli,"users","database/users.sql");
+initTableIfNotExist($mysqli,"resource","database/resource.sql");
 
 ?>
