@@ -9,7 +9,8 @@
 
   //define all file paths
   define('REGISTER_BORROWER', 'usermgt/register_borrower.php');
-  define('USERLIST', 'usermgt/userlist.php'); 
+  define('USERLIST', 'usermgt/userlist.php');
+  define('RESOURCELIST', 'resourcemgt/resourcelist.php');  
 ?>
 
 <!-- database -->
@@ -202,7 +203,7 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                   </span>
 
                   <!-- librarian -->
-                  <a href='math.php'>
+                  <a href="<?php echo (RESOURCELIST) ?>">
                     <button
                       style="height: 5em;width: 20em;display: inline-block;"
                       class="bgprimarycolor"

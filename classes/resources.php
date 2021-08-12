@@ -1,33 +1,39 @@
 <?php
 
 class Resources {
-    private $isbn; // int
-    private $book_no; //int
+    private $bookid; // int
+    private $bookno; //int
+    private $isbn; // string
     private $title; // string
     private $author; // string
     private $publisher; // string
+    private $type;
     private $status; // string
-    private $r_cost; // double
-    private $e_cost; // double
+    private $rcost; // double
+    private $ecost; // double
 
     function __construct(
+        $bookid,
+        $bookno,
         $isbn,
-        $book_no,
         $title,
         $author,
         $publisher,
+        $type,
         $status,
-        $r_cost,
-        $e_cost
+        $rcost,
+        $ecost
     ) {
+    $this->bookid = $bookid;
+    $this->bookno = $bookno;
     $this->isbn = $isbn;
-    $this->book_no = $book_no;
     $this->title = $title;
     $this->author = $author;
     $this->publisher = $publisher;
+    $this->type = $type;
     $this->status = $status;
-    $this->r_cost = $r_cost;
-    $this->e_cost = $e_cost;
+    $this->rcost = $rcost;
+    $this->ecost = $ecost;
     }
     
     //dynamic getters and setters
@@ -37,22 +43,26 @@ class Resources {
     public static function init($sql_array) {
         $instance = null;
         try {
-            //regular cost
-            $rCost = intval($sql_array['r_cost']);
-            $rCost = number_format($rCost,2);
-            //extended cost
-            $eCost = intval($sql_array['e_cost']);
-            $eCost = number_format($eCost,2); 
-
             $instance = new self(
+            $sql_array['bookid'],
+            // $sql_array[0],
+            // $sql_array[0],
+            // $sql_array[0],
+            // $sql_array[0],
+            // $sql_array[0],
+            // $sql_array[0],
+            // $sql_array[0],
+            // $sql_array[0],
+            // $sql_array[0]
+            $sql_array['bookno'],
             $sql_array['isbn'],
-            $sql_array['book_no'],
             $sql_array['title'],
             $sql_array['author'],
             $sql_array['publisher'],
+            $sql_array['type'],
             $sql_array['status'],
-            $rCost,
-            $eCost
+            $sql_array['rcost'],
+            $sql_array['ecost']
             );
         }
         catch (Exception $e) {

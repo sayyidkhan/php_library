@@ -4,7 +4,7 @@ session_start();
 include_once("../config.php");
 
 //adding the user class
-include '../classes/user.php';
+include '../classes/resources.php';
 
 
 //define all file paths
@@ -18,22 +18,22 @@ define('DELETE_USER', 'delete.php');
 <?php
 
 //fetching data in descending order (lastest entry first)
-$query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
+$query = mysqli_query($mysqli, "SELECT * FROM resources ORDER BY bookid DESC");
 $result = array();
 while($res = mysqli_fetch_array($query)){
   //while there is still data to query, continue query until no more result
-  array_push($result, User::init($res));
+  array_push($result, Resources::init($res));
 }
 
 ?>
 
 <html>
 <head>  
-  <title>User List</title>
+  <title>Resourse List</title>
 </head>
 
 <body>
-  <h2>User List</h2>
+  <h2>Resource List</h2>
 
   <div style='margin-bottom: 1em;'>
     <a href='../index.php'>Home</a>
@@ -49,12 +49,14 @@ while($res = mysqli_fetch_array($query)){
 
     <tr bgcolor='#CCCCCC'>
       <td>No</td>
-      <td>Username</td>
-      <td>Name</td>
-      <td>Surname</td>
-      <td>Phone</td>
-      <td>Email</td>
-      <td>Type</td>
+      <td>Book No</td>
+      <td>ISBN</td>
+      <td>Title</td>
+      <td>Author</td>
+      <td>Publisher</td>
+      <td>Status</td>
+      <td>R - Cost</td>
+      <td>E - Cost</td>
       <td>Options</td>
     </tr>
     <?php
@@ -62,22 +64,24 @@ while($res = mysqli_fetch_array($query)){
     $delete_url = DELETE_USER;
 
     $counter = 1;
-    foreach($result as $user) {
-      $userID = $user->id;
+    foreach($result as $resource) {
+      $bookID = $resource->bookid;
 
       echo "<tr>";
       echo "<td>".$counter."</td>";
-      echo "<td>".$user->username."</td>";
-      echo "<td>".$user->name."</td>";
-      echo "<td>".$user->surname."</td>";
-      echo "<td>".$user->phone."</td>";
-      echo "<td>".$user->email."</td>";
-      echo "<td>".$user->type."</td>";  
+      echo "<td>".$resource->bookno."</td>";
+      echo "<td>".$resource->isbn."</td>";
+      echo "<td>".$resource->title."</td>";
+      echo "<td>".$resource->author."</td>";
+      echo "<td>".$resource->publisher."</td>";
+      echo "<td>".$resource->status."</td>";
+      echo "<td>".$resource->rcost."</td>";
+      echo "<td>".$resource->ecost."</td>";    
       echo "<td>
-          <a href=\"$edit_url?id=$userID\">Edit</a> |
-          <a href=\"$delete_url?id=$userID\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a>
-         </td>
-         ";   
+              <a href=\"$edit_url?id=$bookID\">Edit</a> |
+              <a href=\"$delete_url?id=$bookID\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a>
+            </td>
+           ";   
       $counter += 1;
     }
     ?>

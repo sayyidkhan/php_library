@@ -46,6 +46,6 @@ function initTableIfNotExist($conn,$table_name,$sql_filename) {
 **/
 //parameters to pass: ($conn,$table_name,$sql_filename)
 initTableIfNotExist($mysqli,"users","database/users.sql");
-initTableIfNotExist($mysqli,"resource","database/resource.sql");
+initTableIfNotExist($mysqli,"resources","database/resources.sql");
 
 ?>

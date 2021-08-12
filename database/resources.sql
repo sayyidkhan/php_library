@@ -1,4 +1,4 @@
-CREATE TABLE `resource` (
+CREATE TABLE `resources` (
   `bookid` int(11) NOT NULL auto_increment,
   `bookno` int(2) NOT NULL,
   `isbn` varchar(50) NOT NULL,
