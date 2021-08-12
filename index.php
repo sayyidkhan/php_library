@@ -89,7 +89,7 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                 >login</button>
                 <!-- login button -->
 
-                <p class='required-text' style='padding-top: 1em;padding-right: 9em;'>
+                <p class='required-text' style='padding-top: 1em;padding-right: 9em;margin-bottom: 3em;'>
                   <?php
                     //for detecting empty value (search button clicked but query is empty)
                     if (isset($_POST['library-login']) && (empty($_POST['login']) ||  empty($_POST['password'])) ) {
@@ -112,19 +112,23 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                         if(!empty($checkExistingUsername)) {
                             $userObj = User::init($checkExistingUsername);
                             $pw = $userObj->password;
+                            $type = $userObj->type;
                             if($_POST['password'] == $pw) {
                                $_SESSION["login"] = $validateLogin;
+                               $_SESSION["type"] = $type;
                                //refresh UI to update session
                                header("Refresh: 0.1");
                             }
                             else {
                                $_SESSION["login"] = '';
+                               $_SESSION["type"] = '';
                                session_unset();
                                echo '*incorrect password ';
                             }
                         }
                         else {
                             $_SESSION["login"] = '';
+                            $_SESSION["type"] = '';
                             session_unset();
                             echo '*username does not exist or not in system';
                         }
@@ -132,6 +136,7 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                     }
                     elseif(isset($_POST['library-logout'])) {
                         unset($_SESSION['login']);
+                        unset($_SESSION['type']);
                         session_destroy();
                         header("Refresh: 0.1");
                     }
@@ -141,21 +146,45 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
               <!-- login using name -->
             </section>
 
-            <section id="signup-section" style='margin-top:-4em;'>
-              <p>
-                <span>Dont Have an account?</span>
-                <a href='register_borrower.php'>Register</a>
-                <span>with us today!</span>
-              </p>
+            <!-- signup section is only show prior to login -->
+            <section id="signup-section"  style="<?php echo(empty($_SESSION['login']) ? '' : 'display: none;' ) ?>">
+              <div style='margin-top:-4em;'>
+                <p>
+                  <span>Dont Have an account?</span>
+                  <a href='register_borrower.php'>Register</a>
+                  <span>with us today!</span>
+                </p>
+              </div>
+            </section>
+
+            <section id="usertype-section"  style="<?php echo(empty($_SESSION['login']) ? 'display: none;' : '' ) ?>">
+              <div style='margin-top:-4em;'>
+                <h2 class="centerText">
+                  <?php
+                    $usertype = $_SESSION['type'];
+                    if(isset($usertype) && $usertype == 'LIBRARIAN') {
+                        echo 'Hello LIBRARIAN!';
+                    }
+                    else if(isset($usertype) && $usertype == 'BORROWER') {
+                        echo 'Hello User!';
+                    }
+                    else {
+                        echo 'Hello Unspecified User!';
+                        echo "Please contact LIBRARIAN to resolve this issue...";
+                    }
+                  ?>
+                </h2>
+              </div>
             </section>
 
             <section id="digitallibrary-section" style="<?php echo(empty($_SESSION['login']) ? 'display: none;' : '') ?>">
               <h2 class="centerText">
-                Select the quiz you would like to take:
+                Select the options below:
               </h2>
 
               <div style="padding-bottom: 2em;text-align: center;">
 
+                  <!-- librarian -->
                   <a href='math.php'>
                     <button
                       name="submit"
@@ -164,10 +193,37 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                       type="submit"
                       value="Save"
                     >
-                      Math
+                      View All Users
                     </button>
                   </a>
 
+                  <!-- librarian -->
+                  <a href='math.php'>
+                    <button
+                      name="submit"
+                      style="height: 5em;width: 20em;display: inline-block;"
+                      class="bgprimarycolor"
+                      type="submit"
+                      value="Save"
+                    >
+                      View All Resourses
+                    </button>
+                  </a>
+
+                  <!-- normal user & librarian -->
+                  <a href='math.php'>
+                    <button
+                      name="submit"
+                      style="height: 5em;width: 20em;display: inline-block;"
+                      class="bgprimarycolor"
+                      type="submit"
+                      value="Save"
+                    >
+                      View Available Resourses
+                    </button>
+                  </a>
+
+                  <!-- normal user -->
                   <a href='literature.php'>
                     <button 
                      name="submit"
@@ -176,7 +232,7 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                      type="submit"
                      value="Cancel" 
                      >
-                      Literature
+                      View Borrowed Resourses
                      </button>
                   </a>
 
