@@ -22,7 +22,7 @@ class User {
     ) {
     $this->id = $id;
     $this->username = $username;
-    $this->passowrd = $password;
+    $this->password = $password;
     $this->name = $name;
     $this->surname = $surname;
     $this->phone = $phone;

@@ -53,21 +53,25 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
               method='post'
               name='login-name'
               class="boxsizing"
-              action="#quizselection-section" 
+              action="#digitallibrary-section" 
               style="margin:auto;max-width:1000px;margin-bottom: 2em;padding-left: 4em;padding-right: 2em;">
                 <?php
                 $login = $_SESSION["login"];
                 $disabled = empty($_SESSION['login']) ? '' : 'disabled="true"';
-                $bikesearchQuery =
-                "<input 
-                style='padding: 10px;font-size: 17px;border: 1px solid grey;background: #f1f1f1;'
-                class='boxsizing' type='text' placeholder='username' name='login' value='$login' $disabled >";
-                echo $bikesearchQuery;
-                ?>
-                
+                $hidden = empty($_SESSION['login']) ? '' : 'hidden="true"';
+                $loginDetails =
+                "
+                <!-- username -->
                 <input 
                 style='padding: 10px;font-size: 17px;border: 1px solid grey;background: #f1f1f1;'
-                class='boxsizing' type='password' placeholder='password' name='password' value='' >
+                class='boxsizing' type='text' placeholder='username' name='login' value='$login' $disabled >
+                 <!-- password -->
+                <input 
+                style='padding: 10px;font-size: 17px;border: 1px solid grey;background: #f1f1f1;'
+                class='boxsizing' type='password' placeholder='password' name='password' value='' $hidden>
+                ";
+                echo $loginDetails;
+                ?>
 
                 <!-- logout button -->
                 <button 
@@ -88,32 +92,46 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                 <p class='required-text' style='padding-top: 1em;padding-right: 9em;'>
                   <?php
                     //for detecting empty value (search button clicked but query is empty)
-                    if (isset($_POST['library-login']) && empty($_POST['login'])) {
+                    if (isset($_POST['library-login']) && (empty($_POST['login']) ||  empty($_POST['password'])) ) {
                         $_SESSION["login"] = '';
                         session_unset();
-                        echo '*login cannot be blank'; 
+                        if(empty($_POST['login'])){
+                            echo '*username cannot be blank';
+                        }
+                        else if(empty($_POST['password'])){
+                            echo '*password cannot be blank';
+                        }
                     }
                     elseif(isset($_POST['library-login']) && !empty($_POST['login'])) {
                         $validateLogin = $_POST['login'];
-                        $loginStatus = false;
 
-                        //validate login
-
-
-                        //if login status is successful
-                        if($loginStatus) { 
-                           $_SESSION["login"] = $validateLogin;
-                           //refresh UI to update session
-                           header("Refresh: 0.1");
+                        ////////////////   validate login using SQL //////////////////
+                        $query = mysqli_query($mysqli, "SELECT * FROM users WHERE username = '$validateLogin'");
+                        $checkExistingUsername = mysqli_fetch_array($query);
+                        //if not empty - proceed with further validation
+                        if(!empty($checkExistingUsername)) {
+                            $userObj = User::init($checkExistingUsername);
+                            $pw = $userObj->password;
+                            if($_POST['password'] == $pw) {
+                               $_SESSION["login"] = $validateLogin;
+                               //refresh UI to update session
+                               header("Refresh: 0.1");
+                            }
+                            else {
+                               $_SESSION["login"] = '';
+                               session_unset();
+                               echo '*incorrect password ';
+                            }
                         }
                         else {
-                           $_SESSION["login"] = '';
-                           session_unset();
-                           echo '*name does not exist or not in system';
+                            $_SESSION["login"] = '';
+                            session_unset();
+                            echo '*username does not exist or not in system';
                         }
+                        ////////////////   validate login using SQL //////////////////
                     }
                     elseif(isset($_POST['library-logout'])) {
-                        unset($_SESSION['overallScore']); // unset overall score
+                        unset($_SESSION['login']);
                         session_destroy();
                         header("Refresh: 0.1");
                     }
@@ -123,7 +141,15 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
               <!-- login using name -->
             </section>
 
-            <section id="quizselection-section" style="<?php echo(empty($_SESSION['login']) ? 'display: none;' : '') ?>">
+            <section id="signup-section" style='margin-top:-4em;'>
+              <p>
+                <span>Dont Have an account?</span>
+                <a href='register_borrower.php'>Register</a>
+                <span>with us today!</span>
+              </p>
+            </section>
+
+            <section id="digitallibrary-section" style="<?php echo(empty($_SESSION['login']) ? 'display: none;' : '') ?>">
               <h2 class="centerText">
                 Select the quiz you would like to take:
               </h2>
