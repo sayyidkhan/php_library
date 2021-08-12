@@ -4,7 +4,11 @@ include_once("config.php");
 
 //adding the user class
 include 'classes/user.php';
+
+//specify signup type
+define('TYPE', 'BORROWER'); //filepath to expinterest.txt
 ?>
+
 
 <html>
 
@@ -21,14 +25,13 @@ include 'classes/user.php';
 
 
 <head>
-	<title>Add Data</title>
+	<title>Register - Borrowers</title>
 </head>
 
 <body>
-	<h2>Add User</h2>
+	<h2>Register Account</h2>
 
 	<?php
-
 	if(isset($_POST['Submit'])) {
 			function test_input($data) {
 			  $data = trim($data);
@@ -43,7 +46,7 @@ include 'classes/user.php';
 			$surname = mysqli_real_escape_string($mysqli, $_POST['surname']);
 			$phone = mysqli_real_escape_string($mysqli, $_POST['phone']);
 			$email = mysqli_real_escape_string($mysqli, $_POST['email']);
-			$type = mysqli_real_escape_string($mysqli, $_POST['type']);
+			$type = TYPE;
 
 			$usernameErr = "";
 			$passwordErr = "";
@@ -51,7 +54,6 @@ include 'classes/user.php';
 			$surnameErr = "";
 			$phoneErr = "";
 			$emailErr = "";
-			$typeErr = "";
 				
 			//check for errors
 
@@ -126,23 +128,11 @@ include 'classes/user.php';
 			    }
 			}
 
-			/* type error */
-			if (empty($_POST["type"])) {
-			    $typeErr= "user type is required";
-			} 
-			else {
-			    $type = test_input($_POST["type"]);
-			    // check if name is empty 
-			    if (empty($type)) {
-			      $typeErr = "user type is required";
-			    }
-			}
-
 			// if there are no errors can proceed to insert
-			if(empty($usernameErr) && empty($passwordErr) && empty($nameErr) && empty($surnameErr) && empty($phoneErr) && empty($emailErr) && empty($typeErr)) {
-				
-				$checkExistingUsername = mysqli_query($mysqli, "SELECT * FROM users WHERE username == '$username'");
-				if(isset($checkExistingUsername)) {
+			if(empty($usernameErr) && empty($passwordErr) && empty($nameErr) && empty($surnameErr) && empty($phoneErr) && empty($emailErr)) {
+				$query = mysqli_query($mysqli, "SELECT * FROM users WHERE username = '$username'");
+				$checkExistingUsername = mysqli_fetch_array($query);
+				if(!empty($checkExistingUsername)) {
 					//display error message
 					echo "<font color='red'>There is an existing username, choose a different username.</font><br/>";
 				}
@@ -154,17 +144,26 @@ include 'classes/user.php';
 						 VALUES('$username','$password','$name','$surname','$phone','$email','$type')"
 					);
 					//display success message
-					echo "<font color='green'>Data added successfully.</font><br/>";
+					echo "<font color='green'>Username $username added successfully.</font><br/>";
+
+					//clear all save information
+					$username = "";
+					$password = "";
+					$name = "";
+					$surname = "";
+					$phone = "";
+					$email = "";
 				}
 
+				
 			}
 		}
 	?>
 
-	<a href="userlist.php">View User List</a>
+	<a href="index.php">Back to Login Page</a>
 	<br/><br/>
 
-	<form action="add.php" method="post" name="form1">
+	<form action="register_borrower.php" method="post" name="form1">
 		<table width="25%" border="0">
 			<tr> 
 				<td>Username</td>
@@ -209,19 +208,8 @@ include 'classes/user.php';
 				</td>
 			</tr>
 			<tr> 
-				<td>Type</td>
-				<td>
-					<select class='input_length' name="type" id="type" value="<?php echo $type;?>">
-						  <option value=""></option>
-						  <option value="LIBRARIAN">LIBRARIAN</option>
- 						  <option value="BORROWER">BORROWER</option>
-					</select>
-					<span class="error">* <?php echo $typeErr;?></span>
-				</td>
-			</tr>
-			<tr> 
 				<td></td>
-				<td><input type="submit" name="Submit" value="Add"></td>
+				<td><input type="submit" name="Submit" value="add"></td>
 			</tr>
 		</table>
 	</form>

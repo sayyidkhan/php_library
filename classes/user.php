@@ -1,7 +1,9 @@
 <?php
 
 class User {
-    private $id; // id
+    private $id; // int
+    private $username; //string
+    private $password; //string
     private $name; // string
     private $surname; // string
     private $phone; // string
@@ -10,6 +12,8 @@ class User {
 
     function __construct(
         $id,
+        $username,
+        $password,
         $name,
         $surname,
         $phone,
@@ -17,6 +21,8 @@ class User {
         $type
     ) {
     $this->id = $id;
+    $this->username = $username;
+    $this->passowrd = $password;
     $this->name = $name;
     $this->surname = $surname;
     $this->phone = $phone;
@@ -33,6 +39,8 @@ class User {
         try {
             $instance = new self(
             $sql_array['id'],
+            $sql_array['username'],
+            $sql_array['password'],
             $sql_array['name'],
             $sql_array['surname'],
             $sql_array['phone'],

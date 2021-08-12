@@ -1,0 +1,123 @@
+#wrapper {
+  background-color: white;
+}
+
+h1 {
+  margin: 1% 0%;
+  padding: .25em;
+  background-color: #efefef;
+}
+ul {
+  text-align: center;
+}
+h1, p {
+  text-align: center;
+}
+#content {
+  overflow: auto;
+}
+#nav, #feature, #footer {
+  margin: 1% 0%;
+}
+
+.column1, .column2, .column3 {
+  width: 31.3%;
+  float: left;
+}
+
+.column1 {
+  float: left;
+}
+.column2 {
+  margin: 0% 3%;
+}
+.column3 {
+  float: right;
+  margin: 0%;
+}
+
+li {
+  display: inline;
+  padding: 0.5em;
+}
+#nav, #footer {
+  background-color: #efefef;
+  padding: 0.5em 0;
+}
+#feature, .article {
+  background-color: #efefef;
+  height: 10em;
+  margin-bottom: 1em;
+}
+
+.centerText {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* colors */
+.primarycolor {
+  color: #0d6efd;
+}
+
+.bgprimarycolor {
+  color: white;
+  background-color: #0d6efd;
+}
+
+.lightbluecolor {
+  background-color: lightblue;
+}
+
+.bgsecondarycolor {
+  color: white;
+  background-color: #adb5bd;
+}
+
+.bgteritarycolor1 {
+  /* https://cssgradient.io/ */
+  color: white;
+  background: rgb(1,198,246);
+  background: linear-gradient(90deg, rgba(1,198,246,1) 0%, rgba(7,58,154,1) 26%, rgba(6,81,169,1) 45%, rgba(0,212,255,1) 100%);
+}
+
+
+.center-text {
+  text-align: center;
+}
+
+.text-leftalign {
+  text-align: left;
+}
+
+.samerow {
+  display: inline;
+}
+
+.dotted {border-style: dotted;}
+
+/* buttons design */
+
+.long-section-btn {
+  margin: 1em;height: 3em;width: 9em; 
+}
+
+.section-btn {
+  margin: 1em;
+  height: 2em;
+  width: 5em;
+}
+
+
+
+
+
+
+
+
