@@ -12,8 +12,6 @@ define('STATUS', 'AVAILABLE'); //available by default
 //USER ACCESS
 define('USER_ACCESS', 'LIBRARIAN');
 
-//define max cost
-define("MAX_COST",1.00);
 ?>
 
 

@@ -49,3 +49,11 @@ initTableIfNotExist($mysqli,"users","database/users.sql");
 initTableIfNotExist($mysqli,"resources","database/resources.sql");
 
 ?>
+
+<!-- global settings -->
+<?php
+//define max cost
+define("MAX_COST",1.00);
+
+?>
+
