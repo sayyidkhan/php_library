@@ -15,7 +15,10 @@ $flex_css = 'flex.css'; // flex css filename
 define('INSERT_RESOURCE', 'insert_resource.php');
 define('REGISTER_LIBRARIAN', 'register_librarian.php');
 define('EDIT_USER', 'edit.php'); 
-define('DELETE_USER', 'delete.php'); 
+define('DELETE_USER', 'delete.php');
+
+//USER ACCESS
+define('USER_ACCESS', 'LIBRARIAN');
 ?>
 
 <!-- data prep -->
@@ -71,21 +74,21 @@ while($res = mysqli_fetch_array($query)){
 
 <html>
 <head>  
-  <title>Resourse List</title>
+  <title>View All Resourse List</title>
   <!-- main CSS-->
   <link rel="stylesheet" href='<?php echo (CSS_PATH . "$main_css"); ?>' type="text/css">
   <link rel="stylesheet" href='<?php echo (CSS_PATH . "$flex_css"); ?>' type="text/css">
 </head>
 
 <body>
-  <h2>Resource List</h2>
+  <h2>View All Resource List</h2>
 
   <div style='margin-bottom: 1em;'>
     <a href='../index.php'>Home</a>
     <a style='padding-left: 1em;' href='javascript:self.history.back();'>Go Back</a>
   </div>
 
-  <section id='userlist-section' style="<?php echo(($_SESSION['type']) === 'LIBRARIAN' ? '' : 'display: none;') ?>">
+  <section id='userlist-section' style="<?php echo(($_SESSION['type']) === USER_ACCESS ? '' : 'display: none;') ?>">
     <a href="<?php echo (INSERT_RESOURCE) ?>"><button>Insert a new resource</button></a>
     <a href="<?php echo (REGISTER_LIBRARIAN) ?>"><button>Register a new Librarian</button></a>
     <br/><br/>
@@ -99,8 +102,6 @@ while($res = mysqli_fetch_array($query)){
         <input placeholder='author' name='author' value="<?php echo ($_GET['author']) ?>" >
         <input placeholder='status' name='status' value="<?php echo ($_GET['status']) ?>" >
         <button type='submit' name='search_query' value='search' >Search</button>
-        <!-- type='submit' name='search_query' value='clear' -->
-        
       </form>
       <span>
         <a href='resourcelist.php'><button  >Clear</button></a>
@@ -111,11 +112,13 @@ while($res = mysqli_fetch_array($query)){
 
     <tr bgcolor='#CCCCCC'>
       <td>No</td>
+      <td>Book ID</td>
       <td>Book No</td>
       <td>ISBN</td>
       <td>Title</td>
       <td>Author</td>
       <td>Publisher</td>
+      <td>Type</td>
       <td>Status</td>
       <td>R - Cost</td>
       <td>E - Cost</td>
@@ -131,11 +134,13 @@ while($res = mysqli_fetch_array($query)){
 
       echo "<tr>";
       echo "<td>".$counter."</td>";
+      echo "<td>".$bookID."</td>";
       echo "<td>".$resource->bookno."</td>";
       echo "<td>".$resource->isbn."</td>";
       echo "<td>".$resource->title."</td>";
       echo "<td>".$resource->author."</td>";
       echo "<td>".$resource->publisher."</td>";
+      echo "<td>".$resource->type."</td>";
       echo "<td>".$resource->status."</td>";
       echo "<td>".$resource->rcost."</td>";
       echo "<td>".$resource->ecost."</td>";    
@@ -150,7 +155,7 @@ while($res = mysqli_fetch_array($query)){
     </table>
   </section>
 
-  <section id="noaccess-section" style="<?php echo(($_SESSION['type']) === 'LIBRARIAN' ? 'display: none;' : '') ?>">
+  <section id="noaccess-section" style="<?php echo(($_SESSION['type']) === USER_ACCESS ? 'display: none;' : '') ?>">
     <p>you have no access to this section of the page.</p>
   </section>
 

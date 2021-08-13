@@ -1,4 +1,5 @@
 <?php
+session_start();
 //including the database connection file
 include_once("../config.php");
 
@@ -6,7 +7,13 @@ include_once("../config.php");
 include '../classes/user.php';
 
 //specify signup type
-define('TYPE', 'BORROWER'); //filepath to expinterest.txt
+define('STATUS', 'AVAILABLE'); //available by default
+
+//USER ACCESS
+define('USER_ACCESS', 'LIBRARIAN');
+
+//define max cost
+define("MAX_COST",1.00);
 ?>
 
 
@@ -25,11 +32,11 @@ define('TYPE', 'BORROWER'); //filepath to expinterest.txt
 
 
 <head>
-	<title>Resource List - Insert Resource</title>
+	<title>Insert a new resource</title>
 </head>
 
 <body>
-	<h2>Register Account</h2>
+	<h2>Insert a new resource</h2>
 
 	<?php
 	if(isset($_POST['Submit'])) {
@@ -40,119 +47,178 @@ define('TYPE', 'BORROWER'); //filepath to expinterest.txt
 			  return $data;
 			}
 
-			$username = mysqli_real_escape_string($mysqli, $_POST['username']);
-			$password = mysqli_real_escape_string($mysqli, $_POST['password']);
-			$name = mysqli_real_escape_string($mysqli, $_POST['name']);
-			$surname = mysqli_real_escape_string($mysqli, $_POST['surname']);
-			$phone = mysqli_real_escape_string($mysqli, $_POST['phone']);
-			$email = mysqli_real_escape_string($mysqli, $_POST['email']);
-			$type = TYPE;
+			$bookno = mysqli_real_escape_string($mysqli, $_POST['bookno']);
+			$isbn = mysqli_real_escape_string($mysqli, $_POST['isbn']);
+			$title = mysqli_real_escape_string($mysqli, $_POST['title']);
+			$author = mysqli_real_escape_string($mysqli, $_POST['author']);
+			$publisher = mysqli_real_escape_string($mysqli, $_POST['publisher']);
+			$type = mysqli_real_escape_string($mysqli, $_POST['type']);
+			$status = STATUS;
+			$rcost = mysqli_real_escape_string($mysqli, $_POST['rcost']);
+			$ecost = mysqli_real_escape_string($mysqli, $_POST['ecost']);
 
-			$usernameErr = "";
-			$passwordErr = "";
-			$nameErr = "";
-			$surnameErr = "";
-			$phoneErr = "";
-			$emailErr = "";
+			$booknoErr = "";
+			$isbnErr = "";
+			$titleErr = "";
+			$authorErr = "";
+			$publisherErr = "";
+			$typeErr = "";
+			$rcostErr = "";
+			$ecostErr = "";
 				
 			//check for errors
 
-			/* username error */
-			if (empty($_POST["username"])) {
-			    $usernameErr= "username is required";
+			/* Book No  error */
+			if (empty($bookno)) {
+			    $booknoErr = "Book No is required";
+			}
+			else {
+			    $bookno = test_input($bookno);
+			    // check if bookno is well-formed
+			    if (!filter_var($bookno, FILTER_VALIDATE_INT)) {
+			      $booknoErr = "Book No is not a whole number";
+			    }
+			}
+
+			/* isbn error */
+			if (empty($isbn)) {
+			    $isbnErr= "ISBN is required";
 			} 
 			else {
-			    $username = test_input($_POST["username"]);
+			    $isbn = test_input($isbn);
+			    //remove dashes - store digit only
+			    $isbn = str_replace("-", "", $isbn);
 			    // check if username have spaces
-			    if (preg_match('/\s/',$username)) {
-			      $usernameErr = "username cannot have spaces";
+			    if (!filter_var($isbn, FILTER_VALIDATE_INT)) {
+			        $isbnErr = "ISBN format is incorrect. Only accept digits and dashes.";
 			    }
 			}
 
-			/* password error */
-			if (empty($_POST["password"])) {
-			    $passwordErr= "password is required";
+			/* title error */
+			if (empty($title)) {
+			    $titleErr = "Title is required";
 			} 
 			else {
-			    $password = test_input($_POST["password"]);
-			    // check if username have spaces
-			    if (strlen($password) < '8') {
-			        $passwordErr = "Your Password Must Contain At Least 8 Characters!";
+			    $title = test_input($title);
+			    // check if title only contains letters and whitespace
+			    if (!preg_match("/^[a-zA-Z-' ]*$/",$title)) {
+			      $titleErr = "Only letters and white space allowed";
 			    }
 			}
 
-			/* name error */
-			if (empty($_POST["name"])) {
-			    $nameErr = "Name is required";
+			/* author error */
+			if (empty($author)) {
+			    $authorErr = "Author is required";
 			} 
 			else {
-			    $name = test_input($_POST["name"]);
-			    // check if name only contains letters and whitespace
-			    if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
-			      $nameErr = "Only letters and white space allowed";
+			    $author = test_input($author);
+			    // check if author only contains letters and whitespace
+			    if (!preg_match("/^[a-zA-Z-' ]*$/",$author)) {
+			      $authorErr = "Only letters and white space allowed";
 			    }
 			}
 
-			/* surname error */
-			if (empty($_POST["surname"])) {
-			    $surnameErr = "Surname is required";
+			/* publisher error */
+			if (empty($publisher)) {
+			    $publisherErr = "Publisher is required";
+			}
+			else {
+			    $publisher = test_input($publisher);
+			    if (!preg_match("/^[a-zA-Z-' ]*$/",$publisher)) {
+			      $publisherErr = "Only letters and white space allowed";
+			    }
+			}
+
+			/* type error */
+			if (empty($type)) {
+			    $typeErr = "Type is required";
+			}
+
+
+			/* rcost error */
+			if (empty($rcost)) {
+			    $rcostErr= "Cost is required";
 			} 
 			else {
-			    $surname = test_input($_POST["surname"]);
-			    // check if surname only contains letters and whitespace
-			    if (!preg_match("/^[a-zA-Z-' ]*$/",$surname)) {
-			      $surnameErr = "Only letters and white space allowed";
+			    $rcost = test_input($rcost);
+			    // check if not numeric, throw error
+			    if (!is_numeric($rcost)) {
+			        $rcostErr = "Number is not in a numeric format.";
+			    }
+			    //if numeric - do further checking
+			    else {
+			    	$rcost = floatval($rcost);
+			    	$rcost = number_format($rcost,2);
+			    	//if higher than max cost, then throw error
+			    	if($rcost > floatval(MAX_COST)) {
+			    		$rcostErr = "cost set too high";
+			    	}
+			    	//otherwise throw no error
 			    }
 			}
 
-			/* phone error */
-			if (empty($_POST["phone"])) {
-			    $phoneErr = "Phone number is required";
-			}
+			/* ecost error */
+			if (empty($ecost)) {
+			    $ecostErr= "Cost is required";
+			} 
 			else {
-			    $phone = test_input($_POST["phone"]);
-			    if (!preg_match("/^[0-9]*$/",$phone)) {
-			      $phoneErr = "Only numbers allowed";
+			    $ecost = test_input($ecost);
+			    // check if not numeric, throw error
+			    if (!is_numeric($ecost)) {
+			        $ecostErr = "Number is not in a numeric format.";
+			    }
+			    //if numeric - do further checking
+			    else {
+			    	$ecost = floatval($ecost);
+			    	$ecost = number_format($ecost,2);
+			    	//if higher than max cost, then throw error
+			    	if($ecost > floatval(MAX_COST)) {
+			    		$ecostErr = "cost set too high";
+			    	}
+			    	else if($ecost < $rcost) {
+			    		$ecostErr = "cost set too low";
+			    	}
+			    	//otherwise throw no error
 			    }
 			}
+			            
 
-			/* email error */
-			if (empty($_POST["email"])) {
-			    $emailErr = "Email is required";
-			}
-			else {
-			    $email = test_input($_POST["email"]);
-			    // check if e-mail address is well-formed
-			    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			      $emailErr = "Invalid email format";
-			    }
-			}
-
-			// if there are no errors can proceed to insert
-			if(empty($usernameErr) && empty($passwordErr) && empty($nameErr) && empty($surnameErr) && empty($phoneErr) && empty($emailErr)) {
-				$query = mysqli_query($mysqli, "SELECT * FROM users WHERE username = '$username'");
-				$checkExistingUsername = mysqli_fetch_array($query);
-				if(!empty($checkExistingUsername)) {
+			//if there are no errors can proceed to insert
+			if(empty($booknoErr) &&
+			   empty($isbnErr) &&
+			   empty($titleErr) &&
+			   empty($authorErr) &&
+			   empty($publisherErr) &&
+			   empty($typeErr) &&
+			   empty($rcostErr) &&
+			   empty($ecostErr)
+			) {
+				$query = mysqli_query($mysqli, "SELECT * FROM resources WHERE isbn = '$isbn' AND bookno = '$bookno' ");
+				$checkExistingResource = mysqli_fetch_array($query);
+				if(!empty($checkExistingResource)) {
 					//display error message
-					echo "<font color='red'>There is an existing username, choose a different username.</font><br/>";
+					echo "<font color='red'>There is an existing isbn with the same book no, increment either the book no or set a different isbn.</font><br/>";
 				}
 				else {
 					//insert data to database	
 					$result = mysqli_query(
 						$mysqli,
-						"INSERT INTO users(username,password,name,surname,phone,email,type)
-						 VALUES('$username','$password','$name','$surname','$phone','$email','$type')"
+						"INSERT INTO resources(bookno,isbn,title,author,publisher,type,status,rcost,ecost)
+						 VALUES('$bookno','$isbn','$title','$author','$publisher','$type','$status' ,'$rcost' ,'$ecost')"
 					);
 					//display success message
-					echo "<font color='green'>Username $username added successfully.</font><br/>";
+					echo "<font color='green'>Resource added successfully.</font><br/>";
 
 					//clear all save information
-					$username = "";
-					$password = "";
-					$name = "";
-					$surname = "";
-					$phone = "";
-					$email = "";
+					$bookno = "";
+					$isbn = "";
+					$title = "";
+					$author = "";
+					$publisher = "";
+					$type = "";
+					$status = "";
+					$rcost = "";
+					$ecost = "";
 				}
 
 				
@@ -160,63 +226,93 @@ define('TYPE', 'BORROWER'); //filepath to expinterest.txt
 		}
 	?>
 
-	<a href="../index.php">Back to Login Page</a>
+	<a href="resourcelist.php">Back to Resource list</a>
 	<a style='padding-left: 1em;' href='javascript:self.history.back();'>Go Back</a>
 	<br/><br/>
 
-	<form action="register_borrower.php" method="post" name="form1">
-		<table width="25%" border="0">
-			<tr> 
-				<td>Username</td>
-				<td>
-					<input class='input_length' type="text" name="username" value="<?php echo $username;?>">
-					<span class="error">* <?php echo $usernameErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td>Password</td>
-				<td>
-					<input class='input_length' type="text" name="password" value="<?php echo $password;?>">
-					<span class="error">* <?php echo $passwordErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td>Name</td>
-				<td>
-					<input class='input_length' type="text" name="name" value="<?php echo $name;?>">
-					<span class="error">* <?php echo $nameErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td>Surname</td>
-				<td>
-					<input class='input_length' type="text" name="surname" value="<?php echo $surname;?>">
-					<span class="error">* <?php echo $surnameErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td>Phone</td>
-				<td>
-					<input class='input_length' type="text" name="phone" value="<?php echo $phone;?>">
-					<span class="error">* <?php echo $phoneErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td>Email</td>
-				<td>
-					<input class='input_length' type="text" name="email" value="<?php echo $email;?>">
-					<span class="error">* <?php echo $emailErr;?></span>
-				</td>
-			</tr>
-			<tr> 
-				<td></td>
-				<td><input type="submit" name="Submit" value="add"></td>
-			</tr>
-		</table>
-	</form>
+ 	<section id='insertresource-section' style="<?php echo(($_SESSION['type']) === USER_ACCESS ? '' : 'display: none;') ?>">
+		<form action="insert_resource.php" method="post" name="form1">
+			<table width="25%" border="0">
+				<tr> 
+					<td>Book No</td>
+					<td>
+						<input class='input_length' type="text" name="bookno" value="<?php echo $bookno;?>">
+						<span class="error">* <?php echo $booknoErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td>ISBN</td>
+					<td>
+						<input class='input_length' type="text" name="isbn" value="<?php echo $isbn;?>">
+						<span class="error">* <?php echo $isbnErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td>Title</td>
+					<td>
+						<input class='input_length' type="text" name="title" value="<?php echo $title;?>">
+						<span class="error">* <?php echo $titleErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td>Author</td>
+					<td>
+						<input class='input_length' type="text" name="author" value="<?php echo $author;?>">
+						<span class="error">* <?php echo $authorErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td>Publisher</td>
+					<td>
+						<input class='input_length' type="text" name="publisher" value="<?php echo $publisher;?>">
+						<span class="error">* <?php echo $publisherErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td>Type</td>
+					<td>
+						<select class='input_length' name="type" id="type">
+						  <option value=""></option>
+						  <option value="BOOK" <?php echo ($_POST['type'] == 'BOOK' ? ' selected' : '') ?>>BOOK</option>
+ 						  <option value="TEXTBOOK" <?php echo ($_POST['type'] == 'TEXTBOOK' ? ' selected' : '') ?>>TEXTBOOK</option>
+ 						  <option value="WORKBOOK" <?php echo ($_POST['type'] == 'WORKBOOK' ? ' selected' : '') ?>>WORKBOOK</option>
+						</select>
+						<span class="error">* <?php echo $typeErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td>Regular Cost</td>
+					<td>
+						<input class='input_length' type="text" name="rcost" value="<?php echo $rcost;?>">
+						<span class="error">* <?php echo $rcostErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td>Extended Cost</td>
+					<td>
+						<input class='input_length' type="text" name="ecost" value="<?php echo $ecost;?>">
+						<span class="error">* <?php echo $ecostErr;?></span>
+					</td>
+				</tr>
+				<tr> 
+					<td></td>
+					<td><input type="submit" name="Submit" value="add"></td>
+				</tr>
+			</table>
+		</form>
 
-	<a href="register_librarian.php">Register as a Librarian</a>
-	<br/><br/>
+		<p><b>INFO: </b></p>
+		<ul>
+			<li>ISBN number is stored in digits only without dashes. You may put dashes, app will store digits only.</li>
+			<li>Max Amount for Regular Cost or Extended Cost is <?php echo(number_format(MAX_COST,2)) ?> .</li>
+			<li>Extended Cost have to be set higher than Regular cost . Regular cost can be the same as Extended cost.</li>
+		</ul>
+		
+	</section>
+
+	<section id="noaccess-section" style="<?php echo(($_SESSION['type']) === USER_ACCESS ? 'display: none;' : '') ?>">
+    	<p>you have no access to this section of the page.</p>
+  	</section>
 
 </body>
 </html>

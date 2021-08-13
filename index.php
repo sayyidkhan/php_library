@@ -22,7 +22,7 @@ include_once("config.php");
 include 'classes/user.php';
 ?>
 
-<!-- perform query -->
+<!-- get all the users from the database -->
 <?php
 $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
 
