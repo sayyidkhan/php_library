@@ -1,18 +1,18 @@
 <?php
 session_start();
 //including the database connection file
-include_once("../config.php");
+include_once("../../config.php");
 
-//adding the user class
-include '../classes/resources.php';
+//adding the resource class
+include '../../classes/resources.php';
 
 //css
-define('CSS_PATH', '../css/'); //define bootstrap css path
+define('CSS_PATH', '../../css/'); //define bootstrap css path
 $main_css = 'main.css'; // main css filename
 $flex_css = 'flex.css'; // flex css filename
 
 //define all file paths
-define('INSERT_RESOURCE', 'insert_resource.php');
+define('ADD_RESOURCE', 'add.php');
 define('REGISTER_LIBRARIAN', 'register_librarian.php');
 define('EDIT_USER', 'edit.php'); 
 define('DELETE_USER', 'delete.php');
@@ -149,7 +149,7 @@ while($res = mysqli_fetch_array($query)){
   <h2>View All Resource List</h2>
 
   <div style='margin-bottom: 1em;'>
-    <a href='../index.php'>Home</a>
+    <a href='../../index.php'>Home</a>
     <a style='padding-left: 1em;' href='javascript:self.history.back();'>Go Back</a>
   </div>
 
@@ -157,7 +157,7 @@ while($res = mysqli_fetch_array($query)){
     
     <div style="margin-bottom: 1em;">
       <span>Page Navigation:&nbsp;&nbsp;&nbsp;</span>
-      <a href="<?php echo (INSERT_RESOURCE) ?>"><button>Insert a new resource</button></a>
+      <a href="<?php echo (ADD_RESOURCE) ?>"><button>Add a new resource</button></a>
     </div>
     
     <div id='searchrow' style='margin-bottom: 1em;'>

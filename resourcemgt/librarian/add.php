@@ -1,10 +1,10 @@
 <?php
 session_start();
 //including the database connection file
-include_once("../config.php");
+include_once("../../config.php");
 
-//adding the user class
-include '../classes/user.php';
+//adding the resource class
+include '../../classes/resources.php';
 
 //specify signup type
 define('STATUS', 'AVAILABLE'); //available by default

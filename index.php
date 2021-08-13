@@ -10,7 +10,7 @@
   //define all file paths
   define('REGISTER_BORROWER', 'usermgt/register_borrower.php');
   define('USERLIST', 'usermgt/userlist.php');
-  define('RESOURCELIST', 'resourcemgt/resourcelist.php');  
+  define('RESOURCELIST', 'resourcemgt/librarian/resourcelist.php');  
 ?>
 
 <!-- database -->

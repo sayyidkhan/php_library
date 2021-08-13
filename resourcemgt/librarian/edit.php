@@ -1,10 +1,10 @@
 <?php
 session_start();
 //including the database connection file
-include_once("../config.php");
+include_once("../../config.php");
 
-//adding the user class
-include '../classes/resources.php';
+//adding the resource class
+include '../../classes/resources.php';
 
 //USER ACCESS
 define('USER_ACCESS', 'LIBRARIAN');
