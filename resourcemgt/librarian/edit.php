@@ -131,7 +131,6 @@ $resources = Resources::init($res);
 
 <body>
 	<div style='margin-bottom: 1em;margin-top: 1em;'>
-		<a style='padding-left: 1em;' href="../index.php">Home</a>
 	    <a style='padding-left: 1em;' href='resourcelist.php'>Back to Resource List</a>
 	    <a style='padding-left: 1em;' href='javascript:self.history.back();'>Go Back</a>
   	</div>
@@ -188,6 +187,7 @@ $resources = Resources::init($res);
 						<select class='input_length' name="status">
 							<option value="AVAILABLE" <?php echo ($resources->status == 'AVAILABLE' ? ' selected' : '') ?>>AVAILABLE</option>
 	 						<option value="BORROWED" <?php echo ($resources->status == 'BORROWED' ? ' selected' : '') ?>>BORROWED</option>
+	 						<!-- need add logic to prevent changing to extended -->
 	 						<option value="EXTENDED" <?php echo ($resources->status == 'EXTENDED' ? ' selected' : '') ?>>EXTENDED</option>
 						</select>
 						<span class="error">*</span>

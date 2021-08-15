@@ -74,7 +74,6 @@ while($res = mysqli_fetch_array($query)){
 			echo "<td>".$user->email."</td>";
 			echo "<td>".$user->type."</td>";	
 			echo "<td>
-					<a href=\"$edit_url?id=$userID\">Edit</a> |
 					<a href=\"$delete_url?id=$userID\" onClick=\"return confirm('Are you sure you want to delete?')\">Delete</a>
 				 </td>
 				 ";		

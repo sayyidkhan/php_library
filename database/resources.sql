@@ -9,5 +9,8 @@ CREATE TABLE `resources` (
   `status` varchar(50) NOT NULL,
   `rcost` DECIMAL(5,2) NOT NULL,
   `ecost` DECIMAL(5,2) NOT NULL,
+  `username` varchar(50),
+  `startdate` DATE,
+  `enddate` DATE,
   PRIMARY KEY  (`bookid`)
 );

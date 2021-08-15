@@ -229,7 +229,7 @@ define('USER_ACCESS', 'LIBRARIAN');
 	<br/><br/>
 
  	<section id='insertresource-section' style="<?php echo(($_SESSION['type']) === USER_ACCESS ? '' : 'display: none;') ?>">
-		<form action="insert_resource.php" method="post" name="form1">
+		<form action="#" method="post" name="form1">
 			<table width="25%" border="0">
 				<tr> 
 					<td>Book No</td>

@@ -56,4 +56,3 @@ initTableIfNotExist($mysqli,"resources","database/resources.sql");
 define("MAX_COST",1.00);
 
 ?>
-

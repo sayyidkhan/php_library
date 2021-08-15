@@ -10,7 +10,8 @@
   //define all file paths
   define('REGISTER_BORROWER', 'usermgt/register_borrower.php');
   define('USERLIST', 'usermgt/userlist.php');
-  define('RESOURCELIST', 'resourcemgt/librarian/resourcelist.php');  
+  define('RESOURCELIST', 'resourcemgt/librarian/resourcelist.php');
+  define('AVAILABLERESOURCELIST', 'resourcemgt/borrower/availableresourcelist.php');
 ?>
 
 <!-- database -->
@@ -203,39 +204,28 @@ $query = mysqli_query($mysqli, "SELECT * FROM users ORDER BY id DESC");
                   </span>
 
                   <!-- librarian -->
-                  <a href="<?php echo (RESOURCELIST) ?>">
-                    <button
-                      style="height: 5em;width: 20em;display: inline-block;"
-                      class="bgprimarycolor"
-                    >
-                      View All Resourses
-                    </button>
-                  </a>
+                  <span style="<?php echo(($_SESSION['type']) === 'LIBRARIAN' ? '' : 'display: none;') ?>">
+                    <a href="<?php echo (RESOURCELIST) ?>">
+                      <button
+                        style="height: 5em;width: 20em;display: inline-block;"
+                        class="bgprimarycolor"
+                      >
+                        View All Resourses
+                      </button>
+                    </a>
+                  </span>
 
-                  <!-- normal user & librarian -->
-                  <a href='math.php'>
-                    <button
-                      style="height: 5em;width: 20em;display: inline-block;"
-                      class="bgprimarycolor"
-                    >
-                      View Available Resourses
-                    </button>
-                  </a>
-
-                  <!-- normal user -->
-                  <a href='literature.php'>
-                    <button 
-                     name="submit"
-                     style="height: 5em;width: 20em;display: inline-block;"
-                     class="bgprimarycolor"
-                     type="submit"
-                     value="Cancel" 
-                     >
-                      View Borrowed Resourses
-                     </button>
-                  </a>
-
-                  <p id="saved"></p>
+                  <!-- borrower -->
+                  <span style="<?php echo(($_SESSION['type']) === 'BORROWER' ? '' : 'display: none;') ?>">
+                    <a href="<?php echo (AVAILABLERESOURCELIST) ?>">
+                      <button
+                        style="height: 5em;width: 20em;display: inline-block;"
+                        class="bgprimarycolor"
+                      >
+                        View / Borrow / Extend Resourses
+                      </button>
+                    </a>
+                  </span>
 
                </div>
              </section>
