@@ -11,6 +11,9 @@ class Resources {
     private $status; // string
     private $rcost; // double
     private $ecost; // double
+    private $startdate; //date
+    private $enddate; //date
+    private $extenddate; //date
 
     function __construct(
         $bookid,
@@ -22,7 +25,10 @@ class Resources {
         $type,
         $status,
         $rcost,
-        $ecost
+        $ecost,
+        $startdate,
+        $enddate,
+        $extenddate
     ) {
     $this->bookid = $bookid;
     $this->bookno = $bookno;
@@ -34,6 +40,11 @@ class Resources {
     $this->status = $status;
     $this->rcost = $rcost;
     $this->ecost = $ecost;
+    $this->ecost = $ecost;
+    $this->startdate = $startdate;
+    $this->enddate = $enddate;
+    $this->extenddate = $extenddate;
+
     }
     
     //dynamic getters and setters
@@ -53,7 +64,10 @@ class Resources {
             $sql_array['type'],
             $sql_array['status'],
             $sql_array['rcost'],
-            $sql_array['ecost']
+            $sql_array['ecost'],
+            $sql_array['startdate'],
+            $sql_array['enddate'],
+            $sql_array['extenddate']
             );
         }
         catch (Exception $e) {

@@ -196,6 +196,10 @@ while($res = mysqli_fetch_array($query)){
       </span>
     </div>
 
+    <div id='inforow' style='margin-bottom: 1em;'>
+      <span><b>Info: </b> Dates are in YYYY-MM-DD format.</span>
+    </div>
+
     <table width='80%' border=0>
 
     <tr bgcolor='#CCCCCC'>
@@ -259,8 +263,8 @@ while($res = mysqli_fetch_array($query)){
         /**** notification section ****/
       }
       else if($GLOBALS['current_section'] === 'BORROWED') {
-        echo "<td>". 'start_date' ."</td>";
-        echo "<td>". 'end_date' ."</td>";
+        echo "<td>". $resource->startdate ."</td>";
+        echo "<td>". $resource->enddate ."</td>";
         echo "
              <td>
               <a href='#$borrow_modal_id'>More Info</a>

@@ -4,7 +4,7 @@ session_start();
 include("../../config.php");
 
 //get today's date
-$todays_date = date("d-m-y");
+$todays_date = date("y-m-d");
 
 //getting data from url
 $bookid = $_GET['bookid'];

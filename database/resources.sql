@@ -12,5 +12,6 @@ CREATE TABLE `resources` (
   `username` varchar(50),
   `startdate` DATE,
   `enddate` DATE,
+  `extenddate` DATE,
   PRIMARY KEY  (`bookid`)
 );

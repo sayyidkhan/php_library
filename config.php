@@ -4,7 +4,7 @@
 *change configuration information here only 
 **/
 $databaseHost = 'localhost';
-$databaseName = 'test';
+$databaseName = 'takoko_library';
 $databaseUsername = 'root';
 $databasePassword = 'root';
 /**
