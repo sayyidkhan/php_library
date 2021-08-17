@@ -1,8 +1,37 @@
 <!-- messagebox setup -->
 <?php
+//define all file paths
+define('BORROW_BOOK', 'borrow.php');
+define('RETURN_BOOK', 'return.php');
+define('EXTEND_BOOK', 'extend.php'); 
 
 //borrow notification
 function availableNotification($available_modal_id,$resource) {
+  $borrow_url = BORROW_BOOK;
+  $bookID = $resource->bookid;
+  $todays_date = date("d-m-y");
+
+  $form_name = "form-borrow-$bookID";
+  $input_name = "borrow_days_$bookID";
+  $input_value = $_POST[$input_name];
+
+  $borrow_section = "";
+  if(isset($input_value) && !empty($input_value)) {
+      $end_date = date('d-m-y',strtotime("+$input_value day"));
+      $total_cost = number_format(intval($input_value) * $resource->rcost, 2);
+      $borrow_section =
+      "
+      <div><b>End Date: </b> $end_date</div>
+      <div><b>Total Cost for the period:   </b> $total_cost</div>
+      <br>
+
+      <a href=\"$borrow_url?bookid=$bookID&end_date=$end_date\" onClick=\"return confirm('Are you sure you want to borrow book ID: $bookID ?')\">👉 Borrow</a>
+      ";
+  }
+  else {
+      $borrow_section = "";
+  }
+
 	$message = 
 	"
             <div id='$available_modal_id' class='modal-window'>
@@ -23,14 +52,13 @@ function availableNotification($available_modal_id,$resource) {
                 <br>
 
                 <div><small style='color: darkgrey;font-size: 15px;'>Dates to take note of </small></div>
-                <div><b>Start Date: </b> start_date</div>
-                <div><b>End Date:   </b> end_date</div>
-                <div><b>Total Cost for the period:   </b> total_cost</div>
-                <br>
+                <div><b>Start Date: </b> $todays_date</div>
+                <form name='form-borrow-$bookID' method='post'>
+                <div><b>Days to borrow:   </b> <input type='number' name='$input_name' style='width: 50px; margin-right:0.5em;' value='$input_value'><button type='submit'>Confirm</button></div>
+                </form>
 
-                <!-- eg link to borrow 2 weeks -->
-                <!-- eg link to borrow 1 month -->
-                <a href=\"$borrow_url?bookid=$bookID\" onClick=\"return confirm('Are you sure you want to borrow book ID: $bookID ?')\">👉 Borrow</a>
+                <!-- result section -->
+                $borrow_section
                </div>
             </div>
 	";
@@ -39,6 +67,9 @@ function availableNotification($available_modal_id,$resource) {
 
 //borrow notification
 function borrowNotification($borrow_modal_id,$resource) {
+  $extend_url = EXTEND_BOOK;
+  $return_url = RETURN_BOOK;
+  $bookID = $resource->bookid;
 	$message = 
 	"
             <div id='$borrow_modal_id' class='modal-window'>
@@ -83,6 +114,8 @@ function borrowNotification($borrow_modal_id,$resource) {
 
 //borrow notification
 function extendedNotification($extended_modal_id,$resource) {
+  $return_url = RETURN_BOOK;
+  $bookID = $resource->bookid;
 	$message = 
 	"
             <div id='$extended_modal_id' class='modal-window'>

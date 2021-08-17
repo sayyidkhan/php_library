@@ -45,15 +45,6 @@ class Resources {
         try {
             $instance = new self(
             $sql_array['bookid'],
-            // $sql_array[0],
-            // $sql_array[0],
-            // $sql_array[0],
-            // $sql_array[0],
-            // $sql_array[0],
-            // $sql_array[0],
-            // $sql_array[0],
-            // $sql_array[0],
-            // $sql_array[0]
             $sql_array['bookno'],
             $sql_array['isbn'],
             $sql_array['title'],

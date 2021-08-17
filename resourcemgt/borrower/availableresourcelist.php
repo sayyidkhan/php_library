@@ -15,12 +15,6 @@ $main_css = 'main.css'; // main css filename
 $flex_css = 'flex.css'; // flex css filename
 $notification_css = 'notification.css'; //notification css filename
 
-//define all file paths
-define('BORROW_BOOK', 'borrow.php');
-define('RETURN_BOOK', 'return.php');
-define('EXTEND_BOOK', 'extend.php'); 
-
-
 //USER ACCESS
 define('USER_ACCESS', 'BORROWER');
 
@@ -234,12 +228,7 @@ while($res = mysqli_fetch_array($query)){
       <td>Options</td>
     </tr>
     <?php
-    $borrow_url = BORROW_BOOK;
-    $return_url = RETURN_BOOK;
-    $extend_url = EXTEND_BOOK;
-
     $counter = 1;
-
 
     foreach($result as $resource) {
       $bookID = $resource->bookid;
