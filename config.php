@@ -30,14 +30,15 @@ if (!mysqli_select_db($mysqli,$databaseName)){
 
 // 3. create tables if they don't exist
 function initTableIfNotExist($conn,$table_name,$sql_filename) {
-    if ( mysqli_query( "DESCRIBE `$table_name`" ) ) {
-        // my_table exists, no action required
+    if ( $conn->query("select * from $table_name") ) {
+        // my_table exists, no action required'
     }
     else {
         //table not exist, create tables
         $query = file_get_contents($sql_filename);
         $conn->multi_query($query);
     }
+
 }
 
 
@@ -47,12 +48,14 @@ function initTableIfNotExist($conn,$table_name,$sql_filename) {
 //parameters to pass: ($conn,$table_name,$sql_filename)
 initTableIfNotExist($mysqli,"users","database/users.sql");
 initTableIfNotExist($mysqli,"resources","database/resources.sql");
-
 ?>
 
 <!-- global settings -->
 <?php
 //define max cost
 define("MAX_COST",1.00);
+
+// $result = $mysqli -> query("SELECT * FROM resources");
+// echo $result;
 
 ?>
