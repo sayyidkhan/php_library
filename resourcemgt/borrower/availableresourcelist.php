@@ -139,7 +139,7 @@ else {
 }
 
 /* uncomment to verify the sql statement */
-echo $sql_statement;
+//echo $sql_statement;
 
 while($res = mysqli_fetch_array($query)){
       //while there is still data to query, continue query until no more result
@@ -275,9 +275,9 @@ while($res = mysqli_fetch_array($query)){
         /**** notification section ****/
       }
       else if($GLOBALS['current_section'] === 'EXTENDED') {
-        echo "<td>". 'start_date' ."</td>";
-        echo "<td>". 'end_date' ."</td>";
-        echo "<td>". 'extended_date' ."</td>";
+        echo "<td>". $resource->startdate ."</td>";
+        echo "<td>". $resource->enddate ."</td>";
+        echo "<td>". $resource->extenddate ."</td>";
         echo "
              <td>
               <a href='#$extended_modal_id'>More Info</a>

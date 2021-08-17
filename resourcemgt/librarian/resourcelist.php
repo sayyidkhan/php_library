@@ -124,7 +124,7 @@ else {
 }
 
 /* uncomment to verify the sql statement */
-echo $sql_statement;
+//echo $sql_statement;
 
 while($res = mysqli_fetch_array($query)){
       //while there is still data to query, continue query until no more result
