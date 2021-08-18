@@ -6,15 +6,19 @@ include_once("../../config.php");
 //adding the resource class
 include '../../classes/resources.php';
 
+//add the notification query
+include_once("notificationbox.php");
+
 //css
 define('CSS_PATH', '../../css/'); //define bootstrap css path
 $main_css = 'main.css'; // main css filename
 $flex_css = 'flex.css'; // flex css filename
+$notification_css = 'notification.css'; //notification css filename
 
 //define all file paths
 define('ADD_RESOURCE', 'add.php');
 define('REGISTER_LIBRARIAN', 'register_librarian.php');
-define('EDIT_USER', 'edit.php'); 
+define('EDIT_USER', 'edit.php');
 define('DELETE_USER', 'delete.php');
 
 //USER ACCESS
@@ -66,7 +70,7 @@ function getCurrentSection($type_of_query) {
       $additional_query = ' WHERE status = ';
   }
 
-  
+
   if($current_section === 'ALL') {
       $additional_query = '';
   }
@@ -79,7 +83,7 @@ function getCurrentSection($type_of_query) {
   else if($current_section === 'EXTENDED') {
       $additional_query .= "'EXTENDED'";
   }
-  return $additional_query;     
+  return $additional_query;
 }
 
 // logic for search query
@@ -138,11 +142,27 @@ while($res = mysqli_fetch_array($query)){
 
 
 <html>
-<head>  
+<head>
   <title>View All Resourse List</title>
   <!-- main CSS-->
-  <link rel="stylesheet" href='<?php echo (CSS_PATH . "$main_css"); ?>' type="text/css">
-  <link rel="stylesheet" href='<?php echo (CSS_PATH . "$flex_css"); ?>' type="text/css">
+    <link rel="stylesheet" href='<?php echo (CSS_PATH . "$main_css"); ?>' type="text/css">
+    <link rel="stylesheet" href='<?php echo (CSS_PATH . "$flex_css"); ?>' type="text/css">
+    <link rel="stylesheet" href='<?php echo (CSS_PATH . "$notification_css"); ?>' type="text/css">
+
+    <style>
+        .link-button {
+            background: none!important;
+            border: none;
+            padding: 0!important;
+            /*optional*/
+            font-family: arial, sans-serif;
+            /*input has OS specific font-family*/
+            color: #0000EE;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -154,26 +174,26 @@ while($res = mysqli_fetch_array($query)){
   </div>
 
   <section id='userlist-section' style="<?php echo(($_SESSION['type']) === USER_ACCESS ? '' : 'display: none;') ?>">
-    
+
     <div style="margin-bottom: 1em;">
       <span>Page Navigation:&nbsp;&nbsp;&nbsp;</span>
       <a href="<?php echo (ADD_RESOURCE) ?>"><button>Add a new resource</button></a>
     </div>
-    
+
     <div id='searchrow' style='margin-bottom: 1em;'>
       <form action="#" method="get" name='search_form' class='removeCSS'>
         <span>List By:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <button
-        <?php echo ($GLOBALS['current_section'] == 'ALL') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?> 
+        <?php echo ($GLOBALS['current_section'] == 'ALL') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?>
         name='current_section' value='ALL' type='submit' >View All Resources</button>
         <button
-        <?php echo ($GLOBALS['current_section'] == 'AVAILABLE') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?> 
+        <?php echo ($GLOBALS['current_section'] == 'AVAILABLE') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?>
         name='current_section' value='AVAILABLE' type='submit' >View Available Resources</button>
-        <button 
-        <?php echo ($GLOBALS['current_section'] == 'BORROWED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?> 
+        <button
+        <?php echo ($GLOBALS['current_section'] == 'BORROWED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?>
         name='current_section' value='BORROWED' type='submit' >View Borrowed Resources</button>
-        <button 
-        <?php echo ($GLOBALS['current_section'] == 'EXTENDED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?> 
+        <button
+        <?php echo ($GLOBALS['current_section'] == 'EXTENDED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?>
         name='current_section' value='EXTENDED' type='submit' >View Extended Resources</button>
         <br><br>
         <span>Search By: </span>
@@ -211,6 +231,9 @@ while($res = mysqli_fetch_array($query)){
     $counter = 1;
     foreach($result as $resource) {
       $bookID = $resource->bookid;
+      $all_modal_id = "all-modal-$bookID";
+
+      $btn_click = "button_clicked_$bookID";
 
       echo "<tr>";
       echo "<td>".$counter."</td>";
@@ -223,12 +246,19 @@ while($res = mysqli_fetch_array($query)){
       echo "<td>".$resource->type."</td>";
       echo "<td>".$resource->status."</td>";
       echo "<td>".$resource->rcost."</td>";
-      echo "<td>".$resource->ecost."</td>";    
+      echo "<td>".$resource->ecost."</td>";
       echo "<td>
+              <form method='post' action='#$all_modal_id' class='removeCSS'>
+              <button type='submit' name='$btn_click' value='ACTIVE' class='link-button'>More Info</button>
+              </form> | 
               <a href=\"$edit_url?bookid=$bookID\">Update Status</a> |
               <a href=\"$delete_url?bookid=$bookID\" onClick=\"return confirm('Are you sure you want to delete book ID: $bookID ?')\">Delete</a>
             </td>
-           ";   
+           ";
+
+      if($_POST[$btn_click] == 'ACTIVE') {
+          echo allNotification($all_modal_id,$resource);
+      }
       $counter += 1;
     }
     ?>
