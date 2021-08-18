@@ -1,14 +1,14 @@
 <?php
 
 /**
-*change configuration information here only 
+*change configuration information here only
 **/
 $databaseHost = 'localhost';
 $databaseName = 'takoko_library';
 $databaseUsername = 'root';
 $databasePassword = 'root';
 /**
-*change configuration information here only 
+*change configuration information here only
 **/
 
 // 1. Connect to MySQL
@@ -30,7 +30,7 @@ if (!mysqli_select_db($mysqli,$databaseName)){
 
 // 3. create tables if they don't exist
 function initTableIfNotExist($conn,$table_name,$sql_filename) {
-    if ( $conn->query("select * from $table_name") ) {
+    if ( $conn->query("select 1 from $table_name limit 1;") ) {
         // my_table exists, no action required'
     }
     else {
@@ -48,6 +48,8 @@ function initTableIfNotExist($conn,$table_name,$sql_filename) {
 //parameters to pass: ($conn,$table_name,$sql_filename)
 initTableIfNotExist($mysqli,"users","database/users.sql");
 initTableIfNotExist($mysqli,"resources","database/resources.sql");
+
+
 ?>
 
 <!-- global settings -->
@@ -55,7 +57,5 @@ initTableIfNotExist($mysqli,"resources","database/resources.sql");
 //define max cost
 define("MAX_COST",1.00);
 
-// $result = $mysqli -> query("SELECT * FROM resources");
-// echo $result;
 
 ?>
