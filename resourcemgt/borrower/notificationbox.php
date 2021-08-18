@@ -3,10 +3,10 @@
 //define all file paths
 define('BORROW_BOOK', 'borrow.php');
 define('RETURN_BOOK', 'return.php');
-define('EXTEND_BOOK', 'extend.php'); 
+define('EXTEND_BOOK', 'extend.php');
 
 //borrow notification
-function availableNotification($available_modal_id,$resource) {
+function availableNotification($available_modal_id,$btn_click,$resource) {
   $borrow_url = BORROW_BOOK;
   $bookID = $resource->bookid;
   $todays_date = date("y-m-d");
@@ -32,7 +32,7 @@ function availableNotification($available_modal_id,$resource) {
       $borrow_section = "";
   }
 
-	$message = 
+	$message =
 	"
             <div id='$available_modal_id' class='modal-window'>
               <div>
@@ -54,7 +54,11 @@ function availableNotification($available_modal_id,$resource) {
                 <div><small style='color: darkgrey;font-size: 15px;'>Dates to take note of </small></div>
                 <div><b>Start Date: </b> $todays_date</div>
                 <form name='form-borrow-$bookID' method='post'>
-                <div><b>Days to borrow:   </b> <input type='number' name='$input_name' style='width: 50px; margin-right:0.5em;' value='$input_value'><button type='submit'>Confirm</button></div>
+                    <div>
+                        <b>Days to borrow:   </b>
+                        <input type='number' name='$input_name' style='width: 50px; margin-right:0.5em;' value='$input_value'>
+                        <button type='submit' name='$btn_click' value='ACTIVE' >Confirm</button>
+                    </div>
                 </form>
 
                 <!-- result section -->
@@ -66,7 +70,7 @@ function availableNotification($available_modal_id,$resource) {
 }
 
 //borrow notification
-function borrowNotification($borrow_modal_id,$resource) {
+function borrowNotification($borrow_modal_id,$btn_click,$resource) {
   function diff_in_days($e,$l) {
       $earlier = new DateTime($e);
       $later = new DateTime($l);
@@ -103,7 +107,7 @@ function borrowNotification($borrow_modal_id,$resource) {
       $extend_section = "";
   }
 
-	$message = 
+	$message =
 	"
             <div id='$borrow_modal_id' class='modal-window'>
               <div>
@@ -130,7 +134,11 @@ function borrowNotification($borrow_modal_id,$resource) {
 
                 <div><small style='color: darkgrey;font-size: 15px;'>Overdue Info </small></div>
                 <form name='form-extend-$bookID' method='post'>
-                <div><b>Days to Extend:   </b> <input type='number' name='$input_name' style='width: 50px; margin-right:0.5em;' value='$input_value'><button type='submit'>Confirm</button></div>
+                  <div>
+                    <b>Days to Extend:   </b>
+                    <input type='number' name='$input_name' style='width: 50px; margin-right:0.5em;' value='$input_value'>
+                    <button type='submit' name='$btn_click' value='ACTIVE'>Confirm</button>
+                  </div>
                 </form>
                 
                 <!-- result section -->
@@ -161,7 +169,7 @@ function extendedNotification($extended_modal_id,$resource) {
   $extend_cost = number_format(intval($diff_between_enddate_and_extenddate) * $resource->ecost, 2);
   $total_cost =  number_format(floatval($extend_cost) + floatval($total_regular_cost), 2);
 
-	$message = 
+	$message =
 	"
             <div id='$extended_modal_id' class='modal-window'>
               <div>
