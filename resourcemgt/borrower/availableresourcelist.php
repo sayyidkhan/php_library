@@ -7,7 +7,7 @@ include_once("../../config.php");
 include '../../classes/resources.php';
 
 //add the notification query
-include_once("../../notificationbox.php");
+include_once("notificationbox.php");
 
 //css
 define('CSS_PATH', '../../css/'); //define bootstrap css path
@@ -80,7 +80,7 @@ function getCurrentSection($type_of_query) {
       $additional_query = ' WHERE status = ';
   }
 
-  
+
   if($current_section === 'AVAILABLE') {
       $additional_query .= "'AVAILABLE'";
   }
@@ -90,7 +90,7 @@ function getCurrentSection($type_of_query) {
   else if($current_section === 'EXTENDED') {
       $additional_query .= "'EXTENDED'";
   }
-  return $additional_query;     
+  return $additional_query;
 }
 
 // logic for search query
@@ -153,7 +153,7 @@ while($res = mysqli_fetch_array($query)){
 
 
 <html>
-<head>  
+<head>
   <title>View All Resourse List</title>
   <!-- main CSS-->
   <link rel="stylesheet" href='<?php echo (CSS_PATH . "$main_css"); ?>' type="text/css">
@@ -170,18 +170,18 @@ while($res = mysqli_fetch_array($query)){
   </div>
 
   <section id='userlist-section' style="<?php echo(($_SESSION['type']) === USER_ACCESS ? '' : 'display: none;') ?>">
-    
+
     <div id='searchrow' style='margin-bottom: 1em;'>
       <form action="#" method="get" name='search_form' class='removeCSS'>
         <span>List By:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <button
-        <?php echo ($GLOBALS['current_section'] == 'AVAILABLE') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?> 
+        <?php echo ($GLOBALS['current_section'] == 'AVAILABLE') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?>
         name='current_section' value='AVAILABLE' type='submit' >View Available Resources</button>
-        <button 
-        <?php echo ($GLOBALS['current_section'] == 'BORROWED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?> 
+        <button
+        <?php echo ($GLOBALS['current_section'] == 'BORROWED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?>
         name='current_section' value='BORROWED' type='submit' >View Borrowed Resources</button>
-        <button 
-        <?php echo ($GLOBALS['current_section'] == 'EXTENDED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?> 
+        <button
+        <?php echo ($GLOBALS['current_section'] == 'EXTENDED') ? 'disabled="true" style="background-color: lightblue;pointer-events: none;color: grey;" ' : ''; ?>
         name='current_section' value='EXTENDED' type='submit' >View Extended Resources</button>
         <br><br>
         <span>Search By: </span>
@@ -227,8 +227,8 @@ while($res = mysqli_fetch_array($query)){
         echo "<td>Extended Date</td>";
       }
       ?>
-      
-      
+
+
       <td>Options</td>
     </tr>
     <?php
@@ -239,6 +239,8 @@ while($res = mysqli_fetch_array($query)){
       $available_modal_id = "available-modal-$bookID";
       $borrow_modal_id = "borrow-modal-$bookID";
       $extended_modal_id = "extended-modal-$bookID";
+
+      $btn_click = "button_clicked_$bookID";
 
       echo "<tr>";
       echo "<td>".$counter."</td>";
@@ -255,11 +257,15 @@ while($res = mysqli_fetch_array($query)){
         echo "<td>".$resource->ecost."</td>";
         echo "
              <td>
-              <a href='#$available_modal_id'>Borrow</a>
+              <form method='post' action='#$available_modal_id'>
+                <button type='submit' name='$btn_click' value='ACTIVE'>Borrow</button>
+              </form>
              </td>
              ";
         /**** notification section ****/
-        echo availableNotification($available_modal_id,$resource);
+        if($_POST[$btn_click] == 'ACTIVE') {
+            echo availableNotification($available_modal_id,$btn_click, $resource);
+        }
         /**** notification section ****/
       }
       else if($GLOBALS['current_section'] === 'BORROWED') {
@@ -267,11 +273,15 @@ while($res = mysqli_fetch_array($query)){
         echo "<td>". $resource->enddate ."</td>";
         echo "
              <td>
-              <a href='#$borrow_modal_id'>More Info</a>
+              <form method='post' action='#$borrow_modal_id'>
+                <button type='submit' name='$btn_click' value='ACTIVE'>More Info</button>
+              </form>
              </td>
              ";
         /**** notification section ****/
-        echo borrowNotification($borrow_modal_id,$resource);
+        if($_POST[$btn_click] == 'ACTIVE') {
+            echo borrowNotification($borrow_modal_id,$btn_click,$resource);
+        }
         /**** notification section ****/
       }
       else if($GLOBALS['current_section'] === 'EXTENDED') {
@@ -280,14 +290,18 @@ while($res = mysqli_fetch_array($query)){
         echo "<td>". $resource->extenddate ."</td>";
         echo "
              <td>
-              <a href='#$extended_modal_id'>More Info</a>
+              <form method='post' action='#$extended_modal_id'>
+                <button type='submit' name='$btn_click' value='ACTIVE'>More Info</button>
+              </form>
              </td>
              ";
         /**** notification section ****/
-        echo extendedNotification($extended_modal_id,$resource);
-        /**** notification section ****/ 
+        if($_POST[$btn_click] == 'ACTIVE') {
+            echo extendedNotification($extended_modal_id,$resource);
+        }
+        /**** notification section ****/
       }
-      
+
       $counter += 1;
     }
     ?>
