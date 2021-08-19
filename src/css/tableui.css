@@ -1,0 +1,31 @@
+/*table css */
+
+.ei-table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.ei-table tr > td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 10px;
+}
+
+/*scroll feature for table */
+.scrollfeature-table {
+    overflow: auto;
+    margin-left: -5px;
+    border: 1px solid #dddddd;
+}
+
+/* button for delete */
+.btn-delete {
+  width:100px;
+  height:30px;
+  margin-top:1.25em;
+  margin-bottom:0.5em;
+  background-color:#e84158;
+  color: white;
+  border: 1px solid white;
+}
