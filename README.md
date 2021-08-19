@@ -10,11 +10,14 @@ SQL script to create database and tables is present in **database.sql** file.
 ========
 this version allows u to run the app using docker
 
-##run the docker
+##run the application using docker (container technology) 
 ```
 docker compose up -d
 ```
-
+##stop the application
 ```
 docker compose down
 ```
+
+##run application without docker
+navigate to the **main** branch for docker

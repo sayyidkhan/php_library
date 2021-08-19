@@ -3,7 +3,7 @@
 /**
 *change configuration information here only
 **/
-$databaseHost = 'localhost';
+$databaseHost = 'db';
 $databaseName = 'takoko_library';
 $databaseUsername = 'root';
 $databasePassword = 'root';
